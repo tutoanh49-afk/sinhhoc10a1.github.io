@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>ĐỀ CƯƠNG ÔN TẬP SINH HỌC 10 - CUỐI KỲ I</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background:#f5f5f7; margin:0; padding:0; }
+        .container { padding:20px; padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom); }
+        h1 { text-align:center; color:#007aff; font-size:24px; margin:20px 0 40px; }
+        .section-title { text-align:center; color:#007aff; font-size:22px; margin:40px 0 20px; font-weight:600; }
+        .card { background:white; border-radius:16px; padding:20px; margin-bottom:20px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+        .question-num { font-weight:600; color:#007aff; font-size:18px; margin-bottom:10px; }
+        .question-text { font-size:17px; margin-bottom:15px; line-height:1.4; }
+        .option { background:#f2f2f7; border-radius:12px; padding:16px; margin:10px 0; font-size:17px; display:flex; align-items:flex-start; gap:12px; }
+        .option input { flex-shrink:0; margin-top:4px; transform:scale(1.3); }
+        .option img { max-width:120px; display:block; margin-top:6px; }
+        .btn { display:block; width:90%; max-width:400px; margin:40px auto; padding:16px; background:#007aff; color:white; border:none; border-radius:12px; font-size:18px; font-weight:600; }
+        .hidden { display:none; }
+        .correct-answer { background:#d4edda !important; }
+        .wrong-answer { background:#ffd1d1 !important; }
+        #result { text-align:center; font-size:24px; font-weight:700; margin:40px 0; }
+        .question-image { width:100%; max-width:420px; margin:12px auto 18px; display:block; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+    </style>
+</head>
+<body>
+    <!-- IMAGE BANK - TẤT CẢ HÌNH ẢNH ĐỀU THUỘC BÀI 8 -->
+    <div id="image-bank" style="display:none">
+        <img src="https://i.ibb.co/yF8T8Lqc/17-b8.png" alt="17">
+        <img src="https://i.ibb.co/7J3Dv0Pq/18-b8.png" alt="18">
+        <img src="https://i.ibb.co/3wZvmwM/19-b8.png" alt="19">
+        <img src="https://i.ibb.co/tV9MnQc/20-b8.png" alt="20">
+        <img src="https://i.ibb.co/ksHD0vrN/21-b8.png" alt="21">
+    </div>
+
+    <div class="container">
+        <h1>ĐỀ CƯƠNG ÔN TẬP SINH HỌC LỚP 10<br><small>Cuối Kỳ I - 2025</small></h1>
+
+        <div id="quiz-form"></div>
+
+        <button class="btn" id="submit-btn">Nộp Bài & Chấm Điểm</button>
+        <button class="btn hidden" id="restart-btn">Làm Lại Toàn Bộ</button>
+        <div id="result" class="hidden"></div>
+    </div>
+
+    <script>
+        // DỮ LIỆU CÂU HỎI RIÊNG CHO TỪNG BÀI
+        const sections = {
+            bai7: { // BÀI 7: TẾ BÀO NHÂN SƠ
+                title: "BÀI 7 - TẾ BÀO NHÂN SƠ",
+                questions: [
+                    {q:"Câu 1. Tế bào nhân sơ có kích thước khoảng",o:["A. 1 - 5 mm","B. 3 - 5 µm","C. 1 - 5 µm","D. 3 - 5 cm"],c:2},
+                    {q:"Câu 2. Loài nào sau đây là sinh vật nhân sơ?",o:["A. HIV","B. Ruồi giấm","C. Trực khuẩn lao","D. Nấm men"],c:2},
+                    {q:"Câu 3. Tế bào vi khuẩn không có thành phần nào sau đây?",o:["A. Vùng nhân","B. Thành tế bào","C. Màng sinh chất","D. Ti thể"],c:3},
+                    {q:"Câu 4. Tuỳ theo cấu trúc và thành phần hoá học của lớp peptidoglycan, vi khuẩn được chia thành",o:["A. vi khuẩn sống kí sinh và vi khuẩn sống tự do","B. vi khuẩn Gram dương và vi khuẩn Gram âm","C. vi khuẩn dị dưỡng và vi khuẩn tự dưỡng","D. vi khuẩn gây bệnh và vi khuẩn không gây bệnh"],c:1},
+                    {q:"Câu 5. Thành phần nào dưới đây có ở tế bào vi khuẩn?",o:["A. Nhân","B. Ti thể","C. Plasmid","D. Lưới nội chất"],c:2},
+                    {q:"Câu 6. Tế bào nhân sơ được cấu tạo bởi các thành phần chính là",o:["A. Thành tế bào, màng tế bào, tế bào chất, vùng nhân","B. Thành tế bào, màng tế bào, tế bào chất, nhân","C. Màng ngoài, màng tế bào, tế bào chất, vùng nhân","D. Màng tế bào, tế bào chất, vùng nhân"],c:0},
+                    {q:"Câu 7. Vì sao gọi là tế bào nhân sơ vì:",o:["A. Chưa có màng bao bọc khối vật chất di truyền","B. Không có vật chất di truyền trong khối tế bào chất","C. Chưa có màng bao bọc khối tế bào chất","D. Không có hệ thống nội màng và các bào quan có màng bao bọc"],c:0},
+                    {q:"Câu 8. Thành phần nào sau đây đóng vai trò quan trọng trong việc duy trì hình dạng của tế bào thực vật?",o:["A. Thành tế bào","B. Màng sinh chất","C. Lưới nội chất","D. Cầu sinh chất"],c:0},
+                    {q:"Câu 9. Đặc điểm nào sau đây không phải là của các tế bào nhân sơ?",o:["A. Có kích thước nhỏ dao động từ 1 μm đến 5 μm","B. Nhân chưa có màng bọc","C. Không có các bào quan có màng bao bọc","D. Có hệ thống nội màng và bộ khung xương tế bào"],c:3},
+                    {q:"Câu 10. Có bao nhiêu phát biểu sau đây là đúng khi nói về tế bào nhân sơ?<br>(1) Có tỉ lệ S/V nhỏ nên quá trình trao đổi chất với môi trường diễn ra nhanh chóng.<br>(2) Bên trong màng sinh chất là thành tế bào được cấu tạo từ peptidoglycan.<br>(3) Ribosome là bào quan duy nhất ở tế bào vi khuẩn.<br>(4) Vật chất di truyền của tế bào nhân sơ là phân tử DNA mạch kép, dạng vòng.<br>(5) Sinh vật nhân sơ gồm vi khuẩn, vi khuẩn cổ.",o:["A. 3","B. 2","C. 1","D. 4"],c:0},
+                    {q:"Câu 11. Cho các đặc điểm sau:<br>(1) Có kích thước nhỏ.<br>(2) Sống kí sinh và gây bệnh.<br>(3) Chưa có nhân chính thức.<br>(4) Cơ thể chỉ có một tế bào.<br>(5) Sinh sản rất nhanh.<br>Những đặc điểm có ở tất cả các loại vi khuẩn là",o:["A. (1), (2), (3), (4)","B. (1), (2), (4), (5)","C. (2), (3), (4), (5)","D. (1), (3), (4), (5)"],c:3},
+                    {q:"Câu 12. Nếu loại bỏ thành tế bào của các loại vi khuẩn có hình dạng khác nhau, sau đó cho các tế bào này vào trong các dung dịch có nồng độ các chất tan bằng nồng độ các chất tan có trong tế bào thì tất cả các tế bào đều có dạng hình cầu. Từ thí nghiệm này ta có thể rút ra nhận xét gì về vai trò của thành tế bào?",o:["A. Thành tế bào có vai trò bảo vệ tế bào","B. Thành tế bào có vai trò quy định hình dạng của tế bào","C. Thành tế bào có vai trò chống lại áp lực của nước đi vào tế bào","D. Thành tế bào có vai trò ngăn chặn sự xâm nhập của các chất độc"],c:1}
+                ]
+            },
+            bai8: { // BÀI 8: TẾ BÀO NHÂN THỰC
+                title: "BÀI 8 - TẾ BÀO NHÂN THỰC",
+                questions: [
+                    {q:"Câu 1. Sự xoang hoá của tế bào chất ở tế bào nhân thực là do",o:["A. Hệ thống vi sợi và vi ống","B. Hệ thống lưới nội chất","C. Hệ thống nội màng","D. Hệ thống ống và túi"],c:2},
+                    {q:"Câu 2. Bào quan nào sau đây không có ở tế bào thực vật?",o:["A. Bộ máy Golgi","B. Lysosome","C. Peroxisome","D. Ribosome"],c:1},
+                    {q:"Câu 3. Những bào quan nào sau đây chỉ có ở tế bào thực vật, không có ở tế bào động vật?",o:["A. Lục lạp, lưới nội chất trơn, không bào","B. Thành tế bào, lưới nội chất, ti thể","C. Lysosome, ti thể, không bào","D. Thành tế bào, lục lạp, không bào trung tâm"],c:3},
+                    {q:"Câu 4. Các bào quan có màng kép bao bọc là",o:["A. Nhân, lưới nội chất và lysosome","B. Ti thể, bộ máy Golgi và lục lạp","C. Nhân, lục lạp và ti thể","D. Peroxisome, ti thể và lưới nội chất"],c:2},
+                    {q:"Câu 5. Tế bào nhân thực phức tạp hơn tế bào nhân sơ vì chúng có",o:["A. Màng sinh chất","B. Kích thước nhỏ hơn","C. Tốc độ sinh sản cao hơn","D. Các bào quan có màng bao bọc"],c:3},
+                    {q:"Câu 6. Bào quan nào sau đây có ở tế bào người?",o:["A. Không bào co bóp","B. Lysosome","C. Lục lạp","D. Không bào trung tâm"],c:1},
+                    {q:"Câu 7. Kích thước của hầu hết các tế bào động vật và thực vật vào khoảng",o:["A. 0,1 ÷ 0,2 µm","B. 0,5 ÷ 5,0 µm","C. 10 ÷ 100 µm","D. 1,0 ÷ 2,0 mm"],c:2},
+                    {q:"Câu 8. Bào quan nào sau đây là đặc điểm chung ở cả tế bào thực vật và tế bào động vật?",o:["A. Lục lạp","B. Trung thể","C. Không bào trung tâm","D. Ti thể"],c:3},
+                    {q:"Câu 9. Màng sinh chất",o:["A. Cho phép tất cả các chất đi vào và đi ra khỏi tế bào","B. Ngăn không cho tất cả các chất đi vào và đi ra khỏi tế bào","C. Được cấu tạo chủ yếu từ lớp protein kép","D. Được cấu tạo chủ yếu bởi lớp lipid kép"],c:3},
+                    {q:"Câu 10. Những phân tử nào sau đây là thành phần cấu tạo chính của màng sinh chất?",o:["A. Phospholipid và triglyceride","B. Carbohydrate và protein","C. Phospholipid và protein","D. Glycoprotein và cholesterol"],c:2},
+                    {q:"Câu 11. Các tế bào có nhu cầu năng lượng cao thường có bào quan nào sau đây với số lượng lớn hơn các tế bào khác?",o:["A. Lysosome","B. Peroxisome","C. Ti thể","D. Túi vận chuyển"],c:2},
+                    {q:"Câu 12. Cấu trúc nào là nơi tổng hợp các protein có thể được xuất ra khỏi tế bào?",o:["A. Lưới nội chất hạt","B. Lysosome","C. Lưới nội chất trơn","D. Bộ máy Golgi"],c:0},
+                    {q:"Câu 13. Virus, vi khuẩn và các bào quan già, hỏng sẽ bị phá vỡ tại",o:["A. Ribosome","B. Lysosome","C. Peroxisome","D. Ti thể"],c:1},
+                    {q:"Câu 14. Thành phần nào sau đây cấu tạo nên bộ khung tế bào?",o:["A. Màng nhân","B. Vi sợi","C. Ti thể","D. Sợi nhiễm sắc"],c:1},
+                    {q:"Câu 15. Phát biểu nào sau đây là đúng?",o:["A. Tế bào của tất cả các sinh vật đều có nhân","B. Cả tế bào động vật và tế bào thực vật đều có thành tế bào","C. Ở tế bào nhân sơ, không có bất kì bào quan nào được bao bọc bởi màng","D. Tế bào được hình thành từ các nguyên liệu không sống"],c:2},
+                    {q:"Câu 16. Trong cấu trúc của màng sinh chất, loại protein có chức năng nào sau đây chiếm tỉ lệ nhiều nhất?",o:["A. Vận chuyển","B. Hormone","C. Enzyme","D. Thụ thể"],c:0},
+                    {q:"Câu 17. Hãy nhận diện các thành phần sau:<br>1. Lưới nội chất trơn &nbsp; 2. Lưới nội chất hạt &nbsp; 3. Màng nhân &nbsp; 4. Chất nhiễm sắc<br>5. Hạch nhân &nbsp; 6. Lỗ màng nhân &nbsp; 7. Ribosome",o:[],c:-1,img:"17"},
+                    {q:"Câu 18. Hãy nhận diện các thành phần sau:<br>1. Màng nhân &nbsp; 2. Lưới nội chất hạt &nbsp; 3. Lưới nội chất trơn",o:[],c:-1,img:"18"},
+                    {q:"Câu 19. Hãy nhận diện các thành phần sau:<br>1. Thành tế bào &nbsp; 2. Nhân &nbsp; 3. Không bào &nbsp; 4. Lục lạp<br>5. Tế bào chất &nbsp; 6. Màng tế bào",o:[],c:-1,img:"19"},
+                    {q:"Câu 20. Hãy nhận diện các thành phần sau:<br>1. Không bào &nbsp; 2. Màng tế bào &nbsp; 3. Thành tế bào<br>4. Nhân tế bào &nbsp; 5. Tế bào chất &nbsp; 6. Lục lạp",o:[],c:-1,img:"20"},
+                    {q:"Câu 21. Hãy nhận diện các thành phần sau:<br>1. Hạt chất nền &nbsp; 2. Ribosome &nbsp; 3. Mào &nbsp; 4. Xoang gian bào<br>5. Chất nền &nbsp; 6. ATP &nbsp; 7. DNA &nbsp; 8. Màng ngoài &nbsp; 9. Màng trong",o:[],c:-1,img:"21"}
+                ]
+            },
+            bai9: { // BÀI 9: TRAO ĐỔI CHẤT QUA MÀNG SINH CHẤT
+                title: "BÀI 9 - TRAO ĐỔI CHẤT QUA MÀNG SINH CHẤT",
+                questions: [
+                    {q:"Câu 1. Phân tử nào sau đây có thể di chuyển qua lớp lipid kép của màng sinh chất nhanh nhất?",o:["A. CO₂","B. Amino acid","C. Glucose","D. H₂O"],c:0},
+                    {q:"Câu 2. Phân tử có đặc điểm nào sau đây đi qua màng sinh chất dễ dàng nhất?",o:["A. Lớn và kị nước","B. Lớn và ưa nước","C. Nhỏ và kị nước","D. Tích điện"],c:2},
+                    {q:"Câu 3. Sự khác biệt giữa xuất bào và nhập bào là",o:["A. Xuất bào làm tăng diện tích bề mặt của màng sinh chất còn nhập bào làm giảm diện tích bề mặt màng sinh chất","B. Xuất bào không có tính chọn lọc đối với các phân tử được chuyển ra ngoài tế bào, còn nhập bào chọn lọc hơn","C. Nhập bào chỉ vận chuyển nước vào trong tế bào, xuất bào còn vận chuyển nhiều loại phân tử khác","D. Nhập bào đòi hỏi cung cấp năng lượng tế bào nhưng xuất bào thì không"],c:0},
+                    {q:"Câu 4. Ẩm bào liên quan đến việc vận chuyển",o:["A. Các phân tử lớn ra khỏi tế bào","B. Một tế bào vào trong một tế bào khác","C. Chất lỏng vào trong tế bào","D. Các phân tử kị nước vào trong tế bào"],c:2},
+                    {q:"Câu 5. Sự xuất bào là:",o:["A. Hình thức vận chuyển thụ động","B. Cơ chế mà tế bào ăn các tế bào khác","C. Quá trình vận chuyển trong đó các túi được hình thành từ màng sinh chất","D. Hình thức tế bào giải phóng các phân tử lớn như protein"],c:3},
+                    {q:"Câu 6. Phát biểu nào dưới đây là đúng?",o:["A. Thẩm thấu là sự khuếch tán của chất tan ra, vào tế bào","B. Khuếch tán là sự di chuyển của chất tan theo một hướng từ nơi có nồng độ chất tan cao tới nơi có nồng độ chất tan thấp","C. Các phân tử nước khuếch tán từ nơi có nồng độ chất tan cao tới nơi có nồng độ chất tan thấp","D. Trong quá trình khuếch tán, các phân tử di chuyển theo mọi hướng, cuối cùng dẫn đến sự phân bố đồng đều các chất tan trong dung dịch"],c:3},
+                    {q:"Câu 7. Trao đổi chất ở tế bào là:",o:["A. Quá trình vận chuyển các chất ra, vào tế bào qua màng tế bào","B. Quá trình vận chuyển các chất ra khỏi tế bào qua màng tế bào","C. Quá trình vận chuyển các chất ra khỏi tế bào qua thành tế bào","D. Quá trình vận chuyển các chất ra, vào tế bào qua thành tế bào"],c:0},
+                    {q:"Câu 8. Các cơ chế trao đổi chất qua màng tế bào gồm",o:["A. Vận chuyển thụ động, vận chuyển chủ động và vận chuyển vật chất nhờ biến dạng màng tế bào","B. Vận chuyển thụ động, vận chuyển vật chất nhờ biến dạng màng tế bào, thực bào, ẩm bào và xuất bào","C. Khuếch tán đơn giản, khuếch tán tăng cường, thẩm thấu và vận chuyển vật chất nhờ biến dạng màng tế bào","D. Khuếch tán đơn giản, khuếch tán tăng cường, thẩm thấu, thực bào, ẩm bào và xuất bào"],c:3},
+                    {q:"Câu 9. Hiện tượng thẩm thấu là",o:["A. Sự khuếch tán của các chất qua màng","B. Sự khuếch tán của các phân tử nước qua màng","C. Sự khuếch tán của các ion qua màng","D. Sự khuếch tán của chất tan qua màng"],c:1},
+                    {q:"Câu 10. Khi ngâm quả sấu ngập trong nước đường khoảng 3 – 4 ngày, quả sấu sẽ bị teo nhỏ và xuất hiện những nếp nhăn là do",o:["A. Đường từ môi trường được vận chuyển vào trong quả sấu","B. Nước từ trong quả sấu được vận chuyển ra ngoài môi trường","C. Chất dinh dưỡng trong quả sấu đã bị phân giải hết","D. Đường từ trong quả sấu được vận chuyển ra ngoài môi trường"],c:1},
+                    {q:"Câu 11. Tế bào lấy các chất tan trong dung dịch bằng cách màng tế bào lõm vào bên trong hình thành nên túi vận chuyển bao bọc lấy giọt dung dịch rồi tách rời khỏi màng vào bên trong tế bào chất. Quá trình này được gọi là:",o:["A. Khuếch tán có hỗ trợ","B. Nhập bào nhờ thụ thể","C. Ẩm bào","D. Vận chuyển thụ động"],c:2},
+                    {q:"Câu 12. Khi tiếp xúc với thuốc kháng sinh, có loài vi khuẩn sẽ bơm kháng sinh ra khỏi tế bào. Loài vi khuẩn đó có thể thực hiện cơ chế nào sau đây?",o:["A. Khuếch tán đơn giản","B. Khuếch tán tăng cường","C. Thẩm thấu","D. Vận chuyển chủ động"],c:3},
+                    {q:"Câu 13. Khi một con trùng biến hình ăn một con trùng giày. Con trùng biến hình sử dụng hình thức nào sau đây để đưa trùng giày vào bên trong tế bào của nó?",o:["A. Khuếch tán tăng cường","B. Nhập bào","C. Vận chuyển chủ động bằng bơm","D. Xuất bào"],c:1},
+                    {q:"Câu 14. Khi một tế bào hồng cầu người được đặt trong một môi trường nhược trương, nó sẽ",o:["A. Trải qua quá trình phá vỡ tế bào","B. Trải qua quá trình co nguyên sinh","C. Ở trạng thái cân bằng","D. Giảm kích thước"],c:0},
+                    {q:"Câu 15. Hoạt động nào sau đây yêu cầu năng lượng từ ATP?",o:["A. Sự di chuyển của khí O₂ ra khỏi lá","B. Sự di chuyển của ion khoáng vào tế bào lông hút rễ cây","C. Sự di chuyển của hormone steroid vào trong tế bào","D. Sự di chuyển của nước vào tế bào trùng giày"],c:1}
+                ]
+            },
+            bai11: { // BÀI 11: TỔNG HỢP VÀ PHÂN GIẢI CÁC CHẤT TRONG TẾ BÀO
+                title: "BÀI 11 - TỔNG HỢP VÀ PHÂN GIẢI CÁC CHẤT TRONG TẾ BÀO",
+                questions: [
+                    {q:"Câu 1. Tổng hợp các chất trong tế bào là",o:["A. Quá trình chuyển hoá những chất đơn giản thành những chất phức tạp diễn ra trong tế bào với sự xúc tác của enzyme","B. Quá trình chuyển hoá những chất phức tạp thành những chất đơn giản diễn ra trong tế bào với sự xúc tác của enzyme","C. Quá trình chuyển hoá những chất đơn giản thành những chất phức tạp diễn ra ngoài tế bào với sự xúc tác của enzyme","D. Quá trình chuyển hoá những chất phức tạp thành những chất đơn giản diễn ra ngoài tế bào với sự xúc tác của enzyme"],c:0},
+                    {q:"Câu 2. Quá trình tổng hợp các chất trong tế bào có vai trò là",o:["A. Hình thành các chất để xây dựng tế bào và tích lũy năng lượng cho tế bào","B. Hình thành các chất để xây dựng tế bào và giải phóng năng lượng cho tế bào","C. Hình thành các chất xúc tác sinh học và tích lũy năng lượng cho tế bào","D. Hình thành các chất xúc tác sinh học và giải phóng năng lượng cho tế bào"],c:0},
+                    {q:"Câu 3. Nhóm sinh vật có khả năng quang tổng hợp là:",o:["A. Thực vật, nấm, một số loài vi khuẩn","B. Thực vật, tảo, tất cả các loài vi khuẩn","C. Thực vật, tảo, một số loài vi khuẩn","D. Thực vật, nguyên sinh động vật"],c:2},
+                    {q:"Câu 4. Quá trình quang tổng hợp ở thực vật và tảo diễn ra ở bào quan là:",o:["A. Lục lạp","B. Ti thể","C. Ribosome","D. Lưới nội chất"],c:0},
+                    {q:"Câu 5. Oxygen được tạo ra từ quá trình quang tổng hợp có nguồn gốc từ",o:["A. H₂O","B. CO₂","C. C₆H₁₂O₆","D. NADPH"],c:0},
+                    {q:"Câu 6. Sản phẩm của pha sáng tham gia vào chu trình Calvin là",o:["A. ATP và NADPH","B. ATP và O₂","C. NADPH và O₂","D. NADP⁺ và ATP"],c:0},
+                    {q:"Câu 7. Phân giải các chất trong tế bào là:",o:["A. Quá trình chuyển hoá các chất phức tạp thành các chất đơn giản diễn ra trong tế bào nhờ sự xúc tác của hormone","B. Quá trình chuyển hoá các chất phức tạp thành các chất đơn giản diễn ra trong tế bào nhờ sự xúc tác của enzyme","C. Quá trình chuyển hoá các chất đơn giản thành các chất phức tạp diễn ra trong tế bào nhờ sự xúc tác của hormone","D. Quá trình chuyển hoá các chất đơn giản thành các chất phức tạp diễn ra trong tế bào nhờ sự xúc tác của enzyme"],c:1},
+                    {q:"Câu 8. Tế bào phân giải glucose để giải phóng năng lượng theo hai con đường là",o:["A. Hô hấp tế bào và lên men","B. Lên men lactic và hô hấp kị khí","C. Lên men rượu và hô hấp kị khí","D. Lên men rượu và lên men lactic"],c:0},
+                    {q:"Câu 9. Cho các giai đoạn sau:<br>(1) Oxi hoá pyruvic acid và chu trình Krebs<br>(2) Đường phân<br>(3) Chuỗi truyền electron và tổng hợp ATP<br>Trình tự sắp xếp đúng thể hiện các giai đoạn của quá trình hô hấp tế bào là",o:["A. (1) → (2) → (3)","B. (1) → (3) → (2)","C. (2) → (1) → (3)","D. (2) → (3) → (1)"],c:2},
+                    {q:"Câu 10. Phát biểu nào sau đây là không đúng khi nói về quá trình quang tổng hợp?",o:["A. Quá trình quang tổng hợp diễn ra theo 2 pha là pha phụ thuộc ánh sáng (pha sáng) và pha không phụ thuộc ánh sáng (chu trình Calvin)","B. Trong quang tổng hợp, pha không phụ thuộc ánh sáng (chu trình Calvin) vẫn có thể diễn ra trong điều kiện thiếu ánh sáng kéo dài","C. Trong quang tổng hợp, có sự chuyển hóa vật chất từ chất vô cơ thành chất hữu cơ và sự chuyển hóa năng lượng từ quang năng thành hóa năng","D. Sản phẩm của quá trình quang tổng hợp là nguyên liệu cho các quá trình tổng hợp khác đồng thời là nguồn cung cấp năng lượng cho tế bào"],c:1},
+                    {q:"Câu 11. Phát biểu nào sau đây là không đúng khi nói về hô hấp tế bào?",o:["A. Trong quá trình hô hấp tế bào, năng lượng trong các hợp chất hữu cơ được giải phóng từng phần thông qua một chuỗi các phản ứng oxi hóa khử","B. Tùy vào nhu cầu năng lượng của cơ thể mà tốc độ của quá trình hô hấp tế bào có thể diễn ra nhanh hay chậm","C. Quá trình hô hấp tế bào ở mọi loài sinh vật đều có giai đoạn đường phân diễn ra trong tế bào chất và hai giai đoạn còn lại diễn ra ở trong ti thể","D. Trong 3 giai đoạn của quá trình hô hấp tế bào, giai đoạn chuỗi truyền electron và tổng hợp ATP là giai đoạn tổng hợp được nhiều ATP nhất"],c:2},
+                    {q:"Câu 12. Phát biểu nào sau đây là đúng khi nói về sự lên men?",o:["A. Quá trình lên men diễn ra trong điều kiện tế bào có oxygen","B. Lên men là hình thức phân giải chỉ xảy ra đối với vi sinh vật","C. Quá trình lên men không xảy ra giai đoạn chuỗi truyền electron","D. Hiệu quả năng lượng của quá trình lên men cao hơn so với hô hấp tế bào"],c:2}
+                ]
+            }
+        };
+
+        const order = ['bai7', 'bai8', 'bai9', 'bai11']; // Thứ tự cố định: Bài 7 luôn ở đầu
+
+        let allQuestions = [];
+        let questionIndex = 1; // Đánh số câu liên tục từ 1
+
+        order.forEach(key => {
+            const sec = sections[key];
+            // Random chỉ trong bài
+            const shuffled = [...sec.questions];
+            shuffle(shuffled);
+            allQuestions = allQuestions.concat(shuffled);
+        });
+
+        const form = document.getElementById('quiz-form');
+        const submit = document.getElementById('submit-btn');
+        const restart = document.getElementById('restart-btn');
+        const result = document.getElementById('result');
+
+        function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+        function loadQuiz(){
+            let currentTitle = "";
+            allQuestions.forEach((q, index) => {
+                // Xác định tiêu đề bài dựa trên câu hỏi đầu tiên của mỗi bài (sau khi shuffle vẫn giữ nhóm)
+                // Vì đã concat theo thứ tự, dùng vị trí để xác định (có thể tính độ dài)
+                let secTitle = "";
+                let cum = 0;
+                for(let k of order){
+                    cum += sections[k].questions.length;
+                    if(index < cum){
+                        secTitle = sections[k].title;
+                        break;
+                    }
+                }
+
+                if(secTitle !== currentTitle){
+                    currentTitle = secTitle;
+                    const title = document.createElement('div');
+                    title.className = 'section-title';
+                    title.innerHTML = currentTitle;
+                    form.appendChild(title);
+                }
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                let html = `<div class="question-num">Câu ${questionIndex}</div><div class="question-text">${q.q}</div>`;
+                if(q.img){
+                    html += `<img src="" class="question-image" data-img="${q.img}">`;
+                }
+                html += `<div id="opt-${index}"></div>`;
+                card.innerHTML = html;
+                form.appendChild(card);
+
+                const opts = document.getElementById(`opt-${index}`);
+                if(q.c === -1){
+                    opts.innerHTML = "<i>(Quan sát hình và ghi nhớ các thành phần được đánh số)</i>";
+                }else{
+                    shuffle(q.o.map((t,i)=>({t, correct:i===q.c}))).forEach(op=>{
+                        const lab = document.createElement('label');
+                        lab.className = 'option';
+                        lab.innerHTML = `<input type="radio" name="q${index}" value="${op.correct?'c':'w'}"> ${op.t}`;
+                        opts.appendChild(lab);
+                    });
+                }
+                questionIndex++;
+            });
+        }
+
+        function applyImagesByAlt(){
+            const imgs = document.querySelectorAll("#image-bank img");
+            imgs.forEach(img=>{
+                const alt = img.alt;
+                const targets = document.querySelectorAll(`img[data-img="${alt}"]`);
+                targets.forEach(target=>{
+                    target.src = img.src;
+                    target.alt = img.alt;
+                });
+            });
+        }
+
+        submit.onclick = () => {
+            if(confirm('Bạn chắc chắn muốn nộp bài và chấm điểm?')){
+                let score = 0;
+                const total = allQuestions.filter(q => q.c !== -1).length;
+
+                document.querySelectorAll('.card').forEach((card, qi) => {
+                    if(allQuestions[qi].c === -1) return;
+                    const sel = card.querySelector(`input[name="q${qi}"]:checked`);
+                    card.querySelectorAll('.option').forEach(opt => {
+                        const inp = opt.querySelector('input');
+                        if(inp.value === 'c') opt.classList.add('correct-answer');
+                        if(sel && sel === inp && inp.value !== 'c') opt.classList.add('wrong-answer');
+                    });
+                    if(sel && sel.value === 'c') score++;
+                    card.querySelectorAll('input').forEach(i => i.disabled = true);
+                });
+
+                result.innerHTML = `Kết quả: Bạn đúng <span style="color:#34c759">${score}</span> / ${total} câu trắc nghiệm!<br>(Các câu nhận diện hình trong Bài 8 chỉ để quan sát và học thuộc, không tính điểm)`;
+                result.classList.remove('hidden');
+                submit.classList.add('hidden');
+                restart.classList.remove('hidden');
+            }
+        };
+
+        restart.onclick = () => location.reload();
+
+        loadQuiz();
+        applyImagesByAlt();
+    </script>
+</body>
+</html>
